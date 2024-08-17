@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System.Data;
+using Microsoft.CodeAnalysis;
 
 namespace CoffieShop.Controllers
 {
@@ -21,15 +22,19 @@ namespace CoffieShop.Controllers
         //    new OrderDetailModel { OrderDetailID = 10, OrderID = 10, ProductID = 10, Quantity = 4, Amount = 109.99m, TotalAmount = 439.96m, UserID = 101 }
         //};
 
+        #region configuration
         private IConfiguration configuration;
         public OrderDetailController(IConfiguration _configuration)
         {
             configuration = _configuration;
         }
+        #endregion
+
+        #region OrderDetailsList
         /*Methods*/
         public IActionResult OrderDetailsList()
         {
-            string connectionString = this.configuration.GetConnectionString("ConnectionString");
+            string? connectionString = this.configuration.GetConnectionString("ConnectionString");
             SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
             SqlCommand command = connection.CreateCommand();
@@ -40,21 +45,103 @@ namespace CoffieShop.Controllers
             table.Load(reader);
             return View(table);
         }
+        #endregion
+
+
+        #region AddEdit Order Detail Form
         public IActionResult AddEditOrderDetailForm() {
           return View();
         }
+        #endregion
 
-        [HttpPost]
-        public IActionResult AddEditOrderDetail(OrderDetailModel odm) {
+
+        #region Save Order Detail
+        public IActionResult SaveOrderDetail(OrderDetailModel orderDetailModel) {
+            string? connectionString = this.configuration.GetConnectionString("ConnectionString");
+
+            #region SaveOrderDetail
             if (ModelState.IsValid)
             {
-                return RedirectToAction("OrderDetailsList");
+                try
+                {
+
+                    SqlConnection connection = new SqlConnection(connectionString);
+
+                    connection.Open();
+                    SqlCommand command = connection.CreateCommand();
+
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    if (orderDetailModel.OrderDetailID == null)
+                    {
+                        command.CommandText = "SP_OrderDetails_Insert";
+                    }
+                    else
+                    {
+                        command.CommandText = "SP_OrderDetails_UpdateByPK";
+                        command.Parameters.Add("@OrderDetailID", SqlDbType.Int).Value = orderDetailModel.OrderDetailID;
+                    }
+
+                    // Add Parameters
+                    command.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderDetailModel.OrderID;
+                    command.Parameters.Add("@ProductID", SqlDbType.Int).Value = orderDetailModel.ProductID;
+                    command.Parameters.Add("@Quantity", SqlDbType.Int).Value = orderDetailModel.Quantity;
+                    command.Parameters.Add("@Amount", SqlDbType.Decimal).Value = orderDetailModel.Amount; 
+                    command.Parameters.Add("@TotalAmount", SqlDbType.Decimal).Value = orderDetailModel.TotalAmount;
+                    command.Parameters.Add("@UserID", SqlDbType.Int).Value = orderDetailModel.UserID;
+
+                    // Execute the command
+                    command.ExecuteNonQuery();
+
+
+                    TempData["SuccessMessageAdd"] = "OrderDetail added successfully!";
+                    TempData["SuccessMessageEdit"] = "OrderDetail Edit  successfully!";
+                    TempData["OrderDetailID"] = orderDetailModel.OrderDetailID;
+                    return RedirectToAction("OrderDetailsList");
+                }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine("An error occurred: " + ex.Message);
+                    return View("AddEditOrderDetailForm", orderDetailModel);
+                }
             }
             else
             {
-                return View("AddEditOrderDetailForm");
+
+                return View("AddEditOrderDetailForm", orderDetailModel);
             }
+            #endregion
         }
+        #endregion
+
+        #region DeleteOrderDetail
+        public ActionResult DeleteOrderDetail(int OrderDetailID) {
+
+            try
+            {
+                string? connectionString = this.configuration.GetConnectionString("ConnectionString");
+                SqlConnection connection = new SqlConnection(connectionString);
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "SP_OrderDetails_DeleteByPK";
+                // Add the UserID parameter
+                command.Parameters.Add("@OrderDetailID", SqlDbType.Int).Value = OrderDetailID;
+                // Execute the command
+                command.ExecuteNonQuery();
+                return RedirectToAction("OrderDetailsList");
+            }
+            catch (Exception ex)
+            {
+                TempData["errorEx"] = ex;
+                TempData["error"] = "Can not Delete.";
+                return RedirectToAction("OrderDetailsList");
+            }
+
+           
+        }
+        #endregion
 
     }
 }

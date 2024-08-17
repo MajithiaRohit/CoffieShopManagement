@@ -4,8 +4,8 @@ namespace CoffieShop.Models
 {
     public class OrderDetailModel
     {
-        [Key]
-        public int OrderDetailID { get; set; }
+
+        public int? OrderDetailID { get; set; }
 
         [Required(ErrorMessage = "Order ID is required")]
         public int OrderID { get; set; }
