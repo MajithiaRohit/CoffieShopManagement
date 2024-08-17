@@ -24,6 +24,6 @@ namespace CoffieShop.Models
         public string? Description { get; set; }
 
         [Required(ErrorMessage = "User ID is required")]
-        public int UserID { get; set; }
+        public int? UserID { get; set; }
     }
 }
