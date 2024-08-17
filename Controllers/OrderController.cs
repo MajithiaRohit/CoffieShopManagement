@@ -179,8 +179,7 @@ namespace CoffieShop.Controllers
                 {
 
                     Console.WriteLine("An error occurred: " + ex.Message);
-
-                    
+                    TempData["error"] = ex;
                     return View("OrderForm");
                 }
             }
