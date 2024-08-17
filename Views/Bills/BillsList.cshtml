@@ -1,0 +1,60 @@
+﻿@using System.Data;
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">User List</h5>
+            <a class="btn btn-outline-success" asp-controller="Bills" asp-action="AddEditBillsForm">Add User <i class="bi bi-person-add"></i></a>
+            <!-- Table with stripped rows -->
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">BillID</th>
+                        <th scope="col">BillNumber</th>
+                        <th scope="col">BillDate</th>
+                        <th scope="col">OrderID</th>
+                        <th scope="col">TotalAmount</th>
+                        <th scope="col">Discount</th>
+                        <th scope="col">NetAmount</th>
+                        <th scope="col">UserID</th> 
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        foreach (DataRow oreders in Model.Rows)
+                        {
+                            <tr>
+                                <td>@oreders["BillID"]</td>
+                                <td>@oreders["BillNumber"]</td>
+                                <td>@oreders["BillDate"]</td>
+                                <td>@oreders["OrderID"]</td>
+                                <td>@oreders["TotalAmount"]</td>
+                                @{
+                                    if (@oreders["Discount"] == null)
+                                    {
+                                        <td>0%</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@oreders["Discount"] %</td>
+                                    }
+                                }
+                               
+                                <td>₹ @oreders["NetAmount"]</td>
+                                <td>@oreders["UserName"]</td>
+                                <td>
+                                    <a class="btn btn-outline-primary">Edit</a>
+                                    <a class="btn btn-outline-danger">Delete</a>
+
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+
+        </div>
+    </div>
+</div>

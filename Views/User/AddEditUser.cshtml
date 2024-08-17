@@ -1,0 +1,61 @@
+﻿@model CoffieShop.Models.UserModel
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Add User Form</h5>
+
+        @* Hideen feild form User id *@
+        <form asp-action="saveUser" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            @Html.HiddenFor(m => m.UserID)
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MobileNo" class="control-label"></label>
+                <input asp-for="MobileNo" asp-for="MobileNo" class="form-control" />
+                <span asp-validation-for="MobileNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" name="Address" asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+     
+            <div class="form-group col-12 text-center">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+
+            <div class="form-group col-12 text-center">
+                
+                <button type="submit" class="btn btn-outline-success">
+                     @if(Model.UserID <= 0)
+                    {
+                        <text>Add User</text>
+                    }
+                    else
+                    {
+                        <text>Edit User</text>
+                    }
+                </button>
+                <a asp-action="UserList" class="btn btn-outline-danger">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+

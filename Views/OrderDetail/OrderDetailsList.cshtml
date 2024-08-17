@@ -1,0 +1,45 @@
+﻿@using System.Data;
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Order Details List</h5>
+            <a class="btn btn-outline-success" asp-action="AddEditOrderDetailForm">Add New Detail</a>
+            <!-- Table with stripped rows -->
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Order Detail ID</th>
+                        <th scope="col">Order ID</th>
+                        <th scope="col">Product ID</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col"> Total Amount</th>
+                        <th scope="col">User ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        foreach (DataRow oreders in Model.Rows)
+                        {
+                            <tr>
+                                <td>OD @oreders["OrderDetailID"]</td>
+                                <td># @oreders["OrderID"]</td>
+                                <td># @oreders["ProductName"]</td>
+                                <td>₹ @oreders["Amount"]</td>
+                                <td>₹ @oreders["TotalAmount"]</td>
+                                <td>@oreders["UserName"]</td>
+                                <td>
+                                    <a class="btn btn-outline-primary">Edit</a>
+                                    <a class="btn btn-outline-danger">Delete</a>
+
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+
+        </div>
+    </div>
+</div>
