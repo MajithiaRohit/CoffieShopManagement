@@ -3,7 +3,7 @@
 
     @if (TempData["error"] != null)
     {
-        <div class="alert alert-danger mb-3 mt-3" role="alert">
+        <div class="alert alert-danger mb-3 mt-3" role="alert" id="popupMessage">
             @TempData["error"]
         </div>
 
@@ -13,7 +13,7 @@
     {
         @if (TempData["SuccessMessageAdd"] != null)
         {
-            <div class="alert alert-success">
+            <div class="alert alert-success" id="popupMessage">
                 @TempData["SuccessMessageAdd"]
             </div>
         }
@@ -22,7 +22,7 @@
     {
         @if (TempData["SuccessMessageEdit"] != null)
         {
-            <div class="alert alert-success">
+            <div class="alert alert-success" id="popupMessage">
                 @TempData["SuccessMessageEdit"]
             </div>
         }
@@ -77,3 +77,11 @@
         </div>
     </div>
 </div>
+<script>
+    setTimeout(function () {
+        var message = document.getElementById("popupMessage");
+        if (message) {
+            message.style.display = "none";
+        }
+    }, 1000); // Hide after 5 seconds
+</script>

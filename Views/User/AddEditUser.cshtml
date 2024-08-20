@@ -44,7 +44,7 @@
             <div class="form-group col-12 text-center">
                 
                 <button type="submit" class="btn btn-outline-success">
-                     @if(Model.UserID <= 0)
+                     @if(Model.UserID == null)
                     {
                         <text>Add User</text>
                     }

@@ -5,7 +5,7 @@ namespace CoffieShop.Models
     public class UserModel
     {
         [Key]
-        public int UserID { get; set; }
+        public int? UserID { get; set; }
 
         [Required(ErrorMessage = "User name is required")]
         [StringLength(100, ErrorMessage = "User name cannot be longer than 100 characters")]

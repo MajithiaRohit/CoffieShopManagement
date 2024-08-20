@@ -2,14 +2,38 @@
 
 
 <div class="col-lg-12">
-   
-        @if (TempData["error"] != null)
-        {
-        <div class="alert alert-danger mb-3 mt-3" role="alert">
-                @TempData["error"]
-            </div>
+    @if (TempData["error"] != null)
+    {
+        <div class="alert alert-danger mb-3 mt-3" role="alert" id="popupMessage">
+            @TempData["error"]
+        </div>
 
+    }
+    else if (TempData["SuccessMassage"] != null)
+    {
+        <div class="alert alert-danger mb-3 mt-3" role="alert" id="popupMessage">
+            @TempData["SuccessMassage"]
+        </div>
+    }
+
+    @if (Convert.ToInt32(TempData["UserID"]) < 0)
+    {
+        @if (TempData["SuccessMessageAdd"] != null)
+        {
+            <div class="alert alert-success" id="popupMessage">
+                @TempData["SuccessMessageAdd"]
+            </div>
         }
+    }
+    else
+    {
+        @if (TempData["SuccessMessageEdit"] != null)
+        {
+            <div class="alert alert-success" id="popupMessage">
+                @TempData["SuccessMessageEdit"]
+            </div>
+        }
+    }
     <div class="card">
         <div class="card-body">
            
@@ -59,3 +83,11 @@
         </div>
     </div>
 </div>
+<script>
+    setTimeout(function () {
+        var message = document.getElementById("popupMessage");
+        if (message) {
+            message.style.display = "none";
+        }
+    }, 2000); // Hide after 5 seconds
+</script>

@@ -94,7 +94,7 @@ namespace CoffieShop.Controllers
                 billsModel.BillDate = Convert.ToDateTime(@dataRow["BillDate"]);
                 billsModel.OrderID = Convert.ToInt32(@dataRow["OrderID"]);
                 billsModel.TotalAmount = Convert.ToDecimal(@dataRow["TotalAmount"]);
-                billsModel.Discount = Convert.ToDecimal(@dataRow["Discount"]);
+                billsModel.Discount = dataRow["Discount"] == DBNull.Value ? 0 : Convert.ToDecimal(dataRow["Discount"]);
                 billsModel.NetAmount = Convert.ToDecimal(@dataRow["NetAmount"]);
                 billsModel.UserID = Convert.ToInt32(@dataRow["UserID"]);
             }
@@ -138,7 +138,7 @@ namespace CoffieShop.Controllers
                     command.Parameters.Add("@BillDate", SqlDbType.Date).Value = billsModel.BillDate;
                     command.Parameters.Add("@OrderID", SqlDbType.Int).Value = billsModel.OrderID;
                     command.Parameters.Add("@TotalAmount", SqlDbType.Decimal).Value = billsModel.TotalAmount;
-                    command.Parameters.Add("@Discount", SqlDbType.Decimal).Value = billsModel.Discount;
+                    command.Parameters.Add("@Discount", SqlDbType.Decimal).Value = billsModel.Discount ?? (object)DBNull.Value;
                     command.Parameters.Add("@NetAmount", SqlDbType.Decimal).Value = billsModel.@NetAmount;
                     command.Parameters.Add("@UserID", SqlDbType.Int).Value = billsModel.UserID;
 
@@ -146,8 +146,8 @@ namespace CoffieShop.Controllers
                     command.ExecuteNonQuery();
 
 
-                    TempData["SuccessMessageAdd"] = "OrderDetail added successfully!";
-                    TempData["SuccessMessageEdit"] = "OrderDetail Edit  successfully!";
+                    TempData["SuccessMessageAdd"] = "Bill added successfully!";
+                    TempData["SuccessMessageEdit"] = "Bill Edit  successfully!";
                     TempData["OrderDetailID"] = billsModel.BillID;
                     return RedirectToAction("BillsList");
                 }

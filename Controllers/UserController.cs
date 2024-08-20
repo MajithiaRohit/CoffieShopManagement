@@ -81,7 +81,7 @@ namespace CoffieShop.Controllers
                 Console.WriteLine(user.IsActive);
                 SqlCommand command = connection.CreateCommand();
                 command.CommandType = CommandType.StoredProcedure;
-                if(user.UserID <=0)
+                if(user.UserID == null)
                 {
                     command.CommandText = "SP_Users_Insert";
                 }
@@ -102,8 +102,9 @@ namespace CoffieShop.Controllers
 
                 // Execute the command
                 command.ExecuteNonQuery();
-                    
-                
+
+                TempData["SuccessMessageAdd"] = "User Add Successfuly";
+                TempData["SuccessMessageEdit"] = "User Edit Successfuly";
                 return RedirectToAction("UserList");
             }
             else
@@ -129,12 +130,13 @@ namespace CoffieShop.Controllers
                 command.Parameters.Add("@UserID",SqlDbType.Int).Value = UserID;
                 // Execute the command
                 command.ExecuteNonQuery();
+                TempData["SuccessMassage"] = "User Delete Successfuly";
                 return RedirectToAction("UserList");
             }
             catch(Exception ex)
             {
                 ViewBag.Error = ex.Message;
-                TempData["error"] = "Can not Delete Data";    
+                TempData["error"] = "Can not Delete Data";
                 return RedirectToAction("UserList");
             }
             
