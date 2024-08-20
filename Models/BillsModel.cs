@@ -5,7 +5,7 @@ namespace CoffieShop.Models
     public class BillsModel
     {
         [Key]
-        public int BillID { get; set; }
+        public int? BillID { get; set; }
 
         [Required(ErrorMessage = "Bill number is required")]
         [StringLength(100, ErrorMessage = "Bill number cannot be longer than 100 characters")]

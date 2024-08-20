@@ -173,9 +173,9 @@ namespace CoffieShop.Controllers
             }
             catch (Exception ex) {
               
-                TempData["error"] = "Can not Delete.";
+                TempData["errorEx"] = "Can not Delete.";
+                return RedirectToAction("ProductList");
             }
-            return RedirectToAction("ProductList");
         }
         #endregion
     }

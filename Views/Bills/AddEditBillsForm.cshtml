@@ -9,9 +9,9 @@
         <h5 class="card-title">Genrate Bills</h5>
 
         <!-- Vertical Form -->
-        <form asp-action="AddEditBills" class="row g-3">
+        <form asp-action="saveBills" class="row g-3">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-      
+             @Html.HiddenFor(m=>m.BillID)
             <div class="form-group">
                 <label asp-for="BillNumber" class="control-label"></label>
                 <input asp-for="BillNumber" class="form-control" />
@@ -19,7 +19,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="BillDate" class="control-label"></label>
-                <input asp-for="BillDate" class="form-control" />
+                <input type="date" asp-for="BillDate" class="form-control" />
                 <span asp-validation-for="BillDate" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -43,8 +43,13 @@
                 <span asp-validation-for="NetAmount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UserID" class="control-label"></label>
-                <input asp-for="UserID" class="form-control" />
+                <select name="UserID" id="UserID" class="form-control">
+                    <option value="">Select a user</option>
+                    @foreach (var user in ViewBag.UserList)
+                    {
+                        <option value="@user.UserID">@user.UserName</option>
+                    }
+                </select>
                 <span asp-validation-for="UserID" class="text-danger"></span>
             </div>
             <div class="form-group">
