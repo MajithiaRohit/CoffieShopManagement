@@ -49,8 +49,58 @@ namespace CoffieShop.Controllers
 
 
         #region AddEdit Order Detail Form
-        public IActionResult AddEditOrderDetailForm() {
-          return View();
+        public IActionResult AddEditOrderDetailForm(int OrderDetailID) {
+            string? connectionString = this.configuration.GetConnectionString("ConnectionString");
+            
+            #region Display User by thir id DropDownList
+            SqlConnection connection1 = new SqlConnection(connectionString);
+            connection1.Open();
+            SqlCommand command1 = connection1.CreateCommand();
+            command1.CommandType = CommandType.StoredProcedure;
+            command1.CommandText = "Sp_SelectUsers_By_DropDown";
+            SqlDataReader reader1 = command1.ExecuteReader();
+            DataTable dataTable1 = new DataTable();
+            dataTable1.Load(reader1);
+            connection1.Close();
+
+            List<UserDropDownModel> users = new List<UserDropDownModel>();
+
+            foreach (DataRow dataRow in dataTable1.Rows)
+            {
+                UserDropDownModel userDropDownModel = new UserDropDownModel();
+                userDropDownModel.UserID = Convert.ToInt32(dataRow["UserID"]);
+                userDropDownModel.UserName = dataRow["UserName"].ToString();
+                users.Add(userDropDownModel);
+            }
+
+            ViewBag.UserList = users;
+            #endregion
+
+            #region Display ProductByID Aad set value in textbox
+            SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+            SqlCommand command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "SP_OrderDetails_SelectByPK";
+            command.Parameters.AddWithValue("@OrderDetailID", OrderDetailID);
+            SqlDataReader reader = command.ExecuteReader();
+            DataTable table = new DataTable();
+            table.Load(reader);
+            OrderDetailModel orderDetailModel = new OrderDetailModel();
+
+            foreach (DataRow dataRow in table.Rows)
+            {
+                orderDetailModel.OrderID = Convert.ToInt32(@dataRow["OrderID"]);
+                orderDetailModel.ProductID = Convert.ToInt32(@dataRow["ProductID"]);
+                orderDetailModel.Quantity = Convert.ToInt32(@dataRow["Quantity"]);
+                orderDetailModel.Amount = Convert.ToDecimal(@dataRow["Amount"]);
+                orderDetailModel.TotalAmount = Convert.ToDecimal(@dataRow["TotalAmount"]);
+                orderDetailModel.UserID = Convert.ToInt32(@dataRow["UserID"]);
+            }
+
+            #endregion
+
+            return View(orderDetailModel);
         }
         #endregion
 

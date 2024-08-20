@@ -7,7 +7,7 @@
         </div>
 
     }
-    @if (Convert.ToInt32(TempData["OrderDetailID"]) > 0)
+    @if (Convert.ToInt32(TempData["OrderDetailID"]) <0)
     {
         @if (TempData["SuccessMessageAdd"] != null)
         {

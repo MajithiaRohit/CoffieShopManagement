@@ -32,8 +32,13 @@
                 <span asp-validation-for="TotalAmount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UserID" class="control-label"></label>
-                <input type="number" asp-for="UserID" class="form-control" />
+                <select name="UserID" id="UserID" class="form-control">
+                    <option value="">Select a user</option>
+                    @foreach (var user in ViewBag.UserList)
+                    {
+                        <option value="@user.UserID">@user.UserName</option>
+                    }
+                </select>
                 <span asp-validation-for="UserID" class="text-danger"></span>
             </div>
             <div class="form-group">

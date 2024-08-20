@@ -8,10 +8,10 @@ namespace CoffieShop.Models
         public int? OrderDetailID { get; set; }
 
         [Required(ErrorMessage = "Order ID is required")]
-        public int OrderID { get; set; }
+        public int? OrderID { get; set; }
 
         [Required(ErrorMessage = "Product ID is required")]
-        public int ProductID { get; set; }
+        public int? ProductID { get; set; }
 
         [Required(ErrorMessage = "Quantity is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]
@@ -26,6 +26,6 @@ namespace CoffieShop.Models
         public decimal TotalAmount { get; set; }
 
         [Required(ErrorMessage = "User ID is required")]
-        public int UserID { get; set; }
+        public int? UserID { get; set; }
     }
 }
