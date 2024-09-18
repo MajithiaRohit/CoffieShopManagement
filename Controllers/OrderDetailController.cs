@@ -30,6 +30,35 @@ namespace CoffieShop.Controllers
         }
         #endregion
 
+        public List<UserDropDownModel> setUserDropDown()
+        {
+            #region Display User by thir id DropDownList
+            string? connectionString = this.configuration.GetConnectionString("ConnectionString");
+            SqlConnection connection1 = new SqlConnection(connectionString);
+            connection1.Open();
+            SqlCommand command1 = connection1.CreateCommand();
+            command1.CommandType = CommandType.StoredProcedure;
+            command1.CommandText = "Sp_SelectUsers_By_DropDown";
+            SqlDataReader reader1 = command1.ExecuteReader();
+            DataTable dataTable1 = new DataTable();
+            dataTable1.Load(reader1);
+            connection1.Close();
+
+            List<UserDropDownModel> users = new List<UserDropDownModel>();
+
+            foreach (DataRow dataRow in dataTable1.Rows)
+            {
+                UserDropDownModel userDropDownModel = new UserDropDownModel();
+                userDropDownModel.UserID = Convert.ToInt32(dataRow["UserID"]);
+                userDropDownModel.UserName = dataRow["UserName"].ToString();
+                users.Add(userDropDownModel);
+            }
+
+            return users;
+            #endregion
+
+        }
+
         #region OrderDetailsList
         /*Methods*/
         public IActionResult OrderDetailsList()
@@ -51,30 +80,8 @@ namespace CoffieShop.Controllers
         #region AddEdit Order Detail Form
         public IActionResult AddEditOrderDetailForm(int OrderDetailID) {
             string? connectionString = this.configuration.GetConnectionString("ConnectionString");
-            
-            #region Display User by thir id DropDownList
-            SqlConnection connection1 = new SqlConnection(connectionString);
-            connection1.Open();
-            SqlCommand command1 = connection1.CreateCommand();
-            command1.CommandType = CommandType.StoredProcedure;
-            command1.CommandText = "Sp_SelectUsers_By_DropDown";
-            SqlDataReader reader1 = command1.ExecuteReader();
-            DataTable dataTable1 = new DataTable();
-            dataTable1.Load(reader1);
-            connection1.Close();
 
-            List<UserDropDownModel> users = new List<UserDropDownModel>();
-
-            foreach (DataRow dataRow in dataTable1.Rows)
-            {
-                UserDropDownModel userDropDownModel = new UserDropDownModel();
-                userDropDownModel.UserID = Convert.ToInt32(dataRow["UserID"]);
-                userDropDownModel.UserName = dataRow["UserName"].ToString();
-                users.Add(userDropDownModel);
-            }
-
-            ViewBag.UserList = users;
-            #endregion
+            ViewBag.UserList = setUserDropDown();
 
             #region Display ProductByID Aad set value in textbox
             SqlConnection connection = new SqlConnection(connectionString);
@@ -158,7 +165,7 @@ namespace CoffieShop.Controllers
             }
             else
             {
-
+                ViewBag.UserList = setUserDropDown();
                 return View("AddEditOrderDetailForm", orderDetailModel);
             }
             #endregion

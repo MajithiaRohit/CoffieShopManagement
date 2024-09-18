@@ -28,7 +28,7 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">Bills</h5>
-            <a class="btn btn-outline-success" asp-controller="Bills" asp-action="AddEditBillsForm">Add User <i class="bi bi-person-add"></i></a>
+            <a class="btn btn-outline-success" asp-controller="Bills" asp-action="AddEditBillsForm">Genrate new Bill</a>
 
             <!-- Table with stripped rows -->
             <table class="table table-striped">
@@ -72,7 +72,7 @@
                                     <input type="hidden" name="BillID" value="@bill["BillID"]" />
                                     <button type="submit" class="btn btn-outline-primary">Edit</button>
                                 </form>
-                                <form asp-action="DeleteOrderDetail" asp-controller="OrderDetail" method="post" class="d-inline">
+                                <form asp-action="DeleteBill" asp-controller="Bills" method="post" class="d-inline">
                                     <input type="hidden" name="BillID" value="@bill["BillID"]" />
                                     <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to delete this Order Detail?');">Delete</button>
                                 </form>

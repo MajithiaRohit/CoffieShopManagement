@@ -22,6 +22,63 @@ namespace CoffieShop.Controllers
         //    new OrderModel { OrderID = 10, OrderDate = DateTime.Now.AddDays(-9), CustomerName = "Jack", PaymentMode = "Cash", TotalAmount = 1099.99m, ShippingAddress = "132 Main St", UserID = 101 }
         //};
 
+        public List<UserDropDownModel> setUserDropDown()
+        {
+            #region Display User by thir id DropDownList
+            string? connectionString = this.configuration.GetConnectionString("ConnectionString");
+            SqlConnection connection1 = new SqlConnection(connectionString);
+            connection1.Open();
+            SqlCommand command1 = connection1.CreateCommand();
+            command1.CommandType = CommandType.StoredProcedure;
+            command1.CommandText = "Sp_SelectUsers_By_DropDown";
+            SqlDataReader reader1 = command1.ExecuteReader();
+            DataTable dataTable1 = new DataTable();
+            dataTable1.Load(reader1);
+            connection1.Close();
+
+            List<UserDropDownModel> users = new List<UserDropDownModel>();
+
+            foreach (DataRow dataRow in dataTable1.Rows)
+            {
+                UserDropDownModel userDropDownModel = new UserDropDownModel();
+                userDropDownModel.UserID = Convert.ToInt32(dataRow["UserID"]);
+                userDropDownModel.UserName = dataRow["UserName"].ToString();
+                users.Add(userDropDownModel);
+            }
+
+            return users;
+            #endregion
+
+        }
+
+        public List<PaymentModeModel>  setPaymentDropDown()
+        {
+            #region Display Payment Modes DropDownList
+            string? connectionString = this.configuration.GetConnectionString("ConnectionString");
+            SqlConnection connection2 = new SqlConnection(connectionString);
+            connection2.Open();
+            SqlCommand command2 = connection2.CreateCommand();
+            command2.CommandType = CommandType.StoredProcedure;
+            command2.CommandText = "Sp_SelectPaymentModes";
+            SqlDataReader reader2 = command2.ExecuteReader();
+            DataTable dataTable2 = new DataTable();
+            dataTable2.Load(reader2);
+            connection2.Close();
+
+            List<PaymentModeModel> paymentModes = new List<PaymentModeModel>();
+
+            foreach (DataRow dataRow in dataTable2.Rows)
+            {
+                PaymentModeModel paymentMode = new PaymentModeModel();
+                paymentMode.PaymentModeID = Convert.ToInt32(dataRow["PaymentModeID"]);
+                paymentMode.PaymentModeName = dataRow["PaymentModeName"].ToString();
+                paymentModes.Add(paymentMode);
+            }
+
+            return paymentModes;
+            #endregion
+        }
+
         #region Configuration
         private IConfiguration configuration;
         public OrderController(IConfiguration _configuration)
@@ -52,54 +109,9 @@ namespace CoffieShop.Controllers
         {
             string? connectionString = this.configuration.GetConnectionString("ConnectionString");
 
-            #region Display User by thir id DropDownList
-            SqlConnection connection1 = new SqlConnection(connectionString);
-            connection1.Open();
-            SqlCommand command1 = connection1.CreateCommand();
-            command1.CommandType = CommandType.StoredProcedure;
-            command1.CommandText = "Sp_SelectUsers_By_DropDown";
-            SqlDataReader reader1 = command1.ExecuteReader();
-            DataTable dataTable1 = new DataTable();
-            dataTable1.Load(reader1);
-            connection1.Close();
+            ViewBag.UserList = setUserDropDown();
 
-            List<UserDropDownModel> users = new List<UserDropDownModel>();
-
-            foreach (DataRow dataRow in dataTable1.Rows)
-            {
-                UserDropDownModel userDropDownModel = new UserDropDownModel();
-                userDropDownModel.UserID = Convert.ToInt32(dataRow["UserID"]);
-                userDropDownModel.UserName = dataRow["UserName"].ToString();
-                users.Add(userDropDownModel);
-            }
-
-            ViewBag.UserList = users;
-            #endregion
-
-            #region Display Payment Modes DropDownList
-
-            SqlConnection connection2 = new SqlConnection(connectionString);
-            connection2.Open();
-            SqlCommand command2 = connection2.CreateCommand();
-            command2.CommandType = CommandType.StoredProcedure;
-            command2.CommandText = "Sp_SelectPaymentModes";
-            SqlDataReader reader2 = command2.ExecuteReader();
-            DataTable dataTable2 = new DataTable();
-            dataTable2.Load(reader2);
-            connection2.Close();
-
-            List<PaymentModeModel> paymentModes = new List<PaymentModeModel>();
-
-            foreach (DataRow dataRow in dataTable2.Rows)
-            {
-                PaymentModeModel paymentMode = new PaymentModeModel();
-                paymentMode.PaymentModeID = Convert.ToInt32(dataRow["PaymentModeID"]);
-                paymentMode.PaymentModeName = dataRow["PaymentModeName"].ToString();
-                paymentModes.Add(paymentMode);
-            }
-
-            ViewBag.PaymentModeList = paymentModes;
-            #endregion
+            ViewBag.PaymentModeList = setPaymentDropDown();
 
             #region Display ProductByID Aad set value in textbox
             SqlConnection connection = new SqlConnection(connectionString);
@@ -148,7 +160,7 @@ namespace CoffieShop.Controllers
 
                     command.CommandType = CommandType.StoredProcedure;
 
-                    if (orderModel.OrderID <= 0)
+                    if (orderModel.OrderID == null)
                     {
                         command.CommandText = "SP_Orders_Insert";
                     }
@@ -172,20 +184,21 @@ namespace CoffieShop.Controllers
 
                     TempData["SuccessMessageAdd"] = "Order placed successfully!";
                     TempData["SuccessMessageEdit"] = "Order Edit  successfully!";
-                    TempData["ProductID"] = orderModel.OrderID;
+                    TempData["OrderID"] = orderModel.OrderID;
                     return RedirectToAction("OrderList");
                 }
                 catch (Exception ex)
                 {
 
                     Console.WriteLine("An error occurred: " + ex.Message);
-                    TempData["error"] = ex;
                     return View("OrderForm");
                 }
             }
             else
             {
-                return View("OrderForm");
+                ViewBag.UserList = setUserDropDown();
+                ViewBag.PaymentModeList = setPaymentDropDown();
+                return View("OrderForm", orderModel);
             }
         }
         #endregion
@@ -211,7 +224,6 @@ namespace CoffieShop.Controllers
             }
             catch (Exception ex)
             {
-                TempData["errorEx"] = ex;
                 TempData["error"] = "Can not Delete.";
             }
 

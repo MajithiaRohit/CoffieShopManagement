@@ -34,12 +34,11 @@ namespace CoffieShop.Controllers
         }
         #endregion
 
-        #region AddEditProduct And Set textbox feild
-        public IActionResult AddEditProduct(int ProductID)
+
+        public List<UserDropDownModel> setUserDropDown()
         {
-            string? connectionString = this.configuration.GetConnectionString("ConnectionString");
-            
             #region Display User by thir id DropDownList
+            string? connectionString = this.configuration.GetConnectionString("ConnectionString");
             SqlConnection connection1 = new SqlConnection(connectionString);
             connection1.Open();
             SqlCommand command1 = connection1.CreateCommand();
@@ -60,8 +59,18 @@ namespace CoffieShop.Controllers
                 users.Add(userDropDownModel);
             }
 
-            ViewBag.UserList = users;
+            return users;
             #endregion
+
+        }
+
+
+
+        #region AddEditProduct And Set textbox feild
+        public IActionResult AddEditProduct(int ProductID)
+        {
+            string? connectionString = this.configuration.GetConnectionString("ConnectionString");
+            ViewBag.UserList = setUserDropDown();
 
             #region Display ProductByID
             SqlConnection connection = new SqlConnection(connectionString);
@@ -109,7 +118,7 @@ namespace CoffieShop.Controllers
                         
                     command.CommandType = CommandType.StoredProcedure;
 
-                    if (product.ProductID <= 0)
+                    if (product.ProductID == null)
                     {
                         command.CommandText = "SP_Products_Insert";
                     }
@@ -146,7 +155,7 @@ namespace CoffieShop.Controllers
             }
             else
             {
-                
+                ViewBag.UserList = setUserDropDown();
                 return View("AddEditProduct", product);
             }
             #endregion

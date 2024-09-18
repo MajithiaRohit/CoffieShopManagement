@@ -5,7 +5,7 @@ namespace CoffieShop.Models
     public class OrderModel
     {
         [Key]
-        public int OrderID { get; set; }
+        public int? OrderID { get; set; }
 
         [Required(ErrorMessage = "Order date is required")]
         public DateTime OrderDate { get; set; }

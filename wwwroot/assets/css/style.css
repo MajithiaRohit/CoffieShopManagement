@@ -365,7 +365,9 @@ h6 {
 }
 
 .logo img {
-  max-height: 26px;
+  width:250px;
+  height:200px;
+  max-height: 250px;
   margin-right: 6px;
 }
 

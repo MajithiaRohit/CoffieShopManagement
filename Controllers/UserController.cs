@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System.Data;
+using CoffieShop.Session;
 
 
 namespace CoffieShop.Controllers
 {
+    
     public class UserController : Controller
     {
         #region configuration varible set
@@ -17,6 +19,7 @@ namespace CoffieShop.Controllers
         }
         #endregion
 
+        [LoginCheckAccess]
         #region Display User List
         //User List Page
         public IActionResult UserList()
@@ -34,6 +37,7 @@ namespace CoffieShop.Controllers
         }
         #endregion
 
+        [LoginCheckAccess]
         #region AddEditForm & PopulateData in TextFeild
         //AddEdit User Form Page
         public IActionResult AddEditUser(int UserID)
@@ -68,6 +72,7 @@ namespace CoffieShop.Controllers
         }
         #endregion
 
+        [LoginCheckAccess]
         #region AddEditUser
         //Save User Page
         public IActionResult saveUser(UserModel user)
@@ -109,11 +114,12 @@ namespace CoffieShop.Controllers
             }
             else
             {
-                return View("AddEditUser");
+                return View("AddEditUser" , user);
             }
         }
         #endregion
 
+        [LoginCheckAccess]
         #region DeleteUser
         //Delete User Page 
         public IActionResult DeleteUser(int UserID)
@@ -143,5 +149,67 @@ namespace CoffieShop.Controllers
             
         }
         #endregion
+
+
+        public IActionResult UserLogin(UserLoginModel userLoginModel)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    string connectionString = this.configuration.GetConnectionString("ConnectionString");
+                    using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+                    {
+                        sqlConnection.Open();
+                        using (SqlCommand sqlCommand = sqlConnection.CreateCommand())
+                        {
+                            sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+                            sqlCommand.CommandText = "SP_User_Login";
+                            sqlCommand.Parameters.Add("@UserName", SqlDbType.VarChar).Value = userLoginModel.UserName;
+                            sqlCommand.Parameters.Add("@Password", SqlDbType.VarChar).Value = userLoginModel.Password;
+
+                            using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
+                            {
+                                DataTable dataTable = new DataTable();
+                                dataTable.Load(sqlDataReader);
+
+                                if (dataTable.Rows.Count > 0)
+                                {
+                                    foreach (DataRow dr in dataTable.Rows)
+                                    {
+                                        HttpContext.Session.SetString("UserID", dr["UserID"].ToString());
+                                        HttpContext.Session.SetString("UserName", dr["UserName"].ToString());
+                                    }
+                                    // Redirect to ProductList if login is successful
+                                    return RedirectToAction("UserList", "User");
+                                }
+                                else
+                                {
+                                    // No user found, invalid login
+                                    ModelState.AddModelError("", "Invalid username or password.");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (you can also log it to a file or database)
+                TempData["ErrorMessage"] = "Login failed due to an unexpected error. Please try again later.";
+            }
+
+            // Return the login view with the error message
+            return View(userLoginModel); // Ensure this view is set to handle form resubmission
+        }
+
+        [HttpPost]
+        [LoginCheckAccess]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("UserLogin", "User");
+        }
+
     }
 }
