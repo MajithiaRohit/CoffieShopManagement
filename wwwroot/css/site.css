@@ -41,3 +41,9 @@ input[type="checkbox"].input-validation-error {
     display: none;
 }
 
+.mylogo img {
+    width: 250px;
+    height: 40px;
+    max-height: 250px;
+    margin-right: 6px;
+}

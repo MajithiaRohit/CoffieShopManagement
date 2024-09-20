@@ -150,7 +150,7 @@ namespace CoffieShop.Controllers
         }
         #endregion
 
-
+        #region LoginPage
         public IActionResult UserLogin(UserLoginModel userLoginModel)
         {
             try
@@ -202,7 +202,9 @@ namespace CoffieShop.Controllers
             // Return the login view with the error message
             return View(userLoginModel); // Ensure this view is set to handle form resubmission
         }
+        #endregion
 
+        #region logout
         [HttpPost]
         [LoginCheckAccess]
         public IActionResult Logout()
@@ -210,6 +212,7 @@ namespace CoffieShop.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("UserLogin", "User");
         }
+        #endregion
 
     }
 }
