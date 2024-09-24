@@ -205,7 +205,6 @@ namespace CoffieShop.Controllers
         #endregion
 
         #region logout
-        [HttpPost]
         [LoginCheckAccess]
         public IActionResult Logout()
         {
