@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System.Data;
 using Microsoft.CodeAnalysis;
+using CoffieShop.Session;
 
 namespace CoffieShop.Controllers
 {
@@ -59,6 +60,7 @@ namespace CoffieShop.Controllers
 
         }
 
+        [LoginCheckAccess]
         #region OrderDetailsList
         /*Methods*/
         public IActionResult OrderDetailsList()
@@ -76,7 +78,7 @@ namespace CoffieShop.Controllers
         }
         #endregion
 
-
+        [LoginCheckAccess]
         #region AddEdit Order Detail Form
         public IActionResult AddEditOrderDetailForm(int OrderDetailID) {
             string? connectionString = this.configuration.GetConnectionString("ConnectionString");
@@ -111,7 +113,7 @@ namespace CoffieShop.Controllers
         }
         #endregion
 
-
+        [LoginCheckAccess]
         #region Save Order Detail
         public IActionResult SaveOrderDetail(OrderDetailModel orderDetailModel) {
             string? connectionString = this.configuration.GetConnectionString("ConnectionString");
@@ -172,6 +174,7 @@ namespace CoffieShop.Controllers
         }
         #endregion
 
+        [LoginCheckAccess]
         #region DeleteOrderDetail
         public ActionResult DeleteOrderDetail(int OrderDetailID) {
 

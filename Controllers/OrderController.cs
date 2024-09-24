@@ -1,4 +1,5 @@
 ﻿using CoffieShop.Models;
+using CoffieShop.Session;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
@@ -22,6 +23,13 @@ namespace CoffieShop.Controllers
         //    new OrderModel { OrderID = 10, OrderDate = DateTime.Now.AddDays(-9), CustomerName = "Jack", PaymentMode = "Cash", TotalAmount = 1099.99m, ShippingAddress = "132 Main St", UserID = 101 }
         //};
 
+        #region Configuration
+        private IConfiguration configuration;
+        public OrderController(IConfiguration _configuration)
+        {
+            configuration = _configuration;
+        }
+        #endregion
         public List<UserDropDownModel> setUserDropDown()
         {
             #region Display User by thir id DropDownList
@@ -79,14 +87,8 @@ namespace CoffieShop.Controllers
             #endregion
         }
 
-        #region Configuration
-        private IConfiguration configuration;
-        public OrderController(IConfiguration _configuration)
-        {
-            configuration = _configuration;
-        }
-        #endregion
 
+        [LoginCheckAccess]
         #region Display OrderList
         /*Methods*/
         public IActionResult OrderList()
@@ -104,6 +106,7 @@ namespace CoffieShop.Controllers
         }
         #endregion
 
+        [LoginCheckAccess]
         #region AddEditOrderForm
         public IActionResult OrderForm(int OrderID)
         {
@@ -143,7 +146,7 @@ namespace CoffieShop.Controllers
         }
         #endregion
 
-
+        [LoginCheckAccess]
         #region AddEdit Orders Logic
         public IActionResult saveOrder(OrderModel orderModel)
         {
@@ -203,6 +206,7 @@ namespace CoffieShop.Controllers
         }
         #endregion
 
+        [LoginCheckAccess]
         #region Delete Order
         public IActionResult DeleteOrder(int OrderID)
         {

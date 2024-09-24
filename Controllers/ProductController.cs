@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System.Data;
 using Microsoft.CodeAnalysis;
+using CoffieShop.Session;
 
 namespace CoffieShop.Controllers
 {
@@ -18,9 +19,9 @@ namespace CoffieShop.Controllers
         }
         #endregion
 
+        #region Display User by thir id DropDownList
         public List<UserDropDownModel> setUserDropDown()
         {
-            #region Display User by thir id DropDownList
             string? connectionString = this.configuration.GetConnectionString("ConnectionString");
             SqlConnection connection1 = new SqlConnection(connectionString);
             connection1.Open();
@@ -44,10 +45,11 @@ namespace CoffieShop.Controllers
                 users.Add(userDropDownModel);
             }
             return users;
-            #endregion
 
         }
+        #endregion
 
+        [LoginCheckAccess]
         #region Display Product List
         public IActionResult ProductList()
         {
@@ -64,6 +66,7 @@ namespace CoffieShop.Controllers
         }
         #endregion
 
+        [LoginCheckAccess]
         #region AddEditProduct And Set textbox feild
         public IActionResult AddEditProduct(int ProductID)
         {
@@ -107,6 +110,7 @@ namespace CoffieShop.Controllers
 
         #endregion
 
+        [LoginCheckAccess]
         #region saveAddEditProduct
         public IActionResult SaveProduct(ProductModel product)
         {
@@ -165,7 +169,7 @@ namespace CoffieShop.Controllers
 
         #endregion
 
-
+        [LoginCheckAccess]
         #region DeleteProduct
         public IActionResult DeleteProduct(int ProductID)
         {
